@@ -44,16 +44,15 @@ namespace DataAccess.Concrete.InMemory
 
         }
 
-        public Product Get()
-        {
-            throw new NotImplementedException();
-        }
-
         public Product Get(object p)
         {
             throw new NotImplementedException();
         }
 
+        public List<Product> GetById(int productId)
+        {
+            return _products.Where(p => p.ProductId == productId).ToList();
+        }
         public List<Product> GetAll()
         {
             return _products;
