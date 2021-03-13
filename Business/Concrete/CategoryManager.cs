@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
@@ -22,11 +23,13 @@ namespace Business.Concrete
             _categoryDal = categoryDal;
         }
 
-        public List<Category> GetAll()
+        public IDataResult<List<Category>>GetAll()
         {
-            return _categoryDal.GetAll();
-        }
 
-       
+            return new SuccessDataResult<List<Category>>(_categoryDal.GetAll());
+        }
+     
+
+
     }
 }
