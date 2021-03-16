@@ -13,5 +13,6 @@ namespace Business.Constants
         public static string ProductCountofCategoryError = "Sorry you entered the max. value";
         public static string ProductNameAlreadyExists = "Sorry, the name already exists";
         public static string CategoryLimitExceeded = "Category Limit is full";
+        public static string AuthorizationDenied = "Authorization is Denied";
     }
 }
