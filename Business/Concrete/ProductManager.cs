@@ -2,7 +2,10 @@
 using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
+using Core.Aspects.Performence;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Business;
 using Core.Utilities.Results;
@@ -31,6 +34,8 @@ namespace Business.Concrete
 
         [SecuredOperation("product.add,admin")]
         [ValidationAspect(typeof(ProductValidator))]
+        [CacheRemoveAspect("IProductService.Get")]
+
         public IResult Add(Product product)
         {
               IResult result = BusinessRules.Run(CheckIfProductNameExists(product.ProductName)
@@ -47,10 +52,13 @@ namespace Business.Concrete
 
             
         }
+        [CacheAspect] //Key,Value
         public IDataResult<List<Product>> GetAll()
         {
             //is kodlari
             //yetkisi var mi?
+          
+
             if (DateTime.Now.Hour == 20)
             {
                 return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
@@ -81,6 +89,7 @@ namespace Business.Concrete
 
         }
         [ValidationAspect(typeof(Product))]
+        [CacheRemoveAspect("IProductService.Get")]
         public IResult Update(Product product)
         {
             throw new NotImplementedException();
@@ -116,6 +125,19 @@ namespace Business.Concrete
 
             }
             return new SuccessResult();
+        }
+      //  [PerformanceAspect(5)] bu sadece getbyId de calisir.
+        [TransactionScopeAspect]
+
+        public IResult AddTransactionalTest(Product product)
+        {
+            Add(product);
+            if(product.UnitPrice < 10)
+            {
+                throw new Exception("");
+            }
+            Add(product);
+            return null;
         }
     }
 }
